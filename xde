@@ -1,7 +1,7 @@
 ###############################
 # Static variables            #
 ###############################
-
+https://gist.github.com/splaspood/1473761#file-bash_iniparse-sh
 # TERMINAL COLORS
 
 readonly NONE='\033[00m'
