@@ -89,7 +89,7 @@ function process_input {
       else
         if [[ ! $line =~ [^[:space:]] ]]
         then
-          continue
+          continue # continue if line is empty
         else
           echo -e "      - ${line}"
           #GROUPS[${line}]="${line}"
