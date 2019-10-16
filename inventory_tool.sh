@@ -74,21 +74,26 @@ function process_input {
         #line="${line#?}" # remove [
         #line="${line%?}" # remove ]
         grp=${line}
-        echo -e "found group ${grp}"
+        echo -e "found group ${line}"
 
         # GROUPS already containes this group, process HOSTS
         if [[ " ${GROUPS[@]} " =~ " ${line} " ]]; then
-          echo -e "${YELLOW}..duplicate ${line}${NONE}"
+          #echo -e "${YELLOW}..duplicate ${line}${NONE}"
+          GROUPS[${line}]="${line}"
         fi
 
         # GROUPS doesn't contain this group
         if [[ ! " ${GROUPS[@]} " =~ " ${line} " ]]; then
-          GROUPS[${grp}]=${grp}
+          GROUPS[${line}]="${line}"
         fi
       else
-        # HOSTS
-        #GROUPS[${line}]="host_${line}"
-        echo -e "....${line} from ${grp}"
+        if [[ ! $line =~ [^[:space:]] ]]
+        then
+          continue
+        else
+          echo -e "      - ${line}"
+          #GROUPS[${line}]="${line}"
+        fi
       fi
 
 
