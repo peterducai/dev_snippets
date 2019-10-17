@@ -1,0 +1,34 @@
+---
+- hosts: all
+  tasks:
+
+  # - name: make sure locate is installed
+  #   package:
+  #     name: mlocate
+  #     state: present
+
+  # - name: updatedb for locate
+  #   shell: updatedb
+
+  - name: locate all public keys
+    shell: "locate .pub"
+    register: pubkeys
+
+  - name: make sure there are no ssh keys except specified locations
+    shell: "locate .pub | grep -v /home | grep -v /etc/ssh | grep -v /usr/share/doc"
+    register: locations
+    failed_when: locations.stdout != ''
+
+  - name: show keys
+    debug:
+      msg: "key {{ item }}"
+    loop: "{{ pubkeys.stdout_lines }}"
+
+  - name: check public ssh keys if they are compliant
+    shell: "ssh-keygen -l -f {{ item }}"
+    register: ssh_output
+    with_items: "{{ pubkeys.stdout_lines }}"
+    failed_when: >
+      ("4096" not in ssh_output.stdout) or
+      (ssh_output.stderr != '') or
+      (ssh_output.rc != 0)
